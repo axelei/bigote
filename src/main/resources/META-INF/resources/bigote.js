@@ -12,7 +12,7 @@ function isInvalidUrl(url) {
 }
 
 function download() {
-    const url = document.getElementById("urlText").value;
+    const url = document.getElementById("urlText").value.trim();
 
     if (isBlank(url)) {
         alert("Can't download a blank URL")
