@@ -22,6 +22,7 @@ public class YoutubeService {
     public String getVideoTitle(String videoUrl) throws IOException {
         Document doc = Jsoup.connect(videoUrl)
                 .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36")
+                .header("Accept-Language", "en")
                 .get();
 
         Element metaTitle = doc.select("meta[property=og:title]").first();
@@ -66,8 +67,8 @@ public class YoutubeService {
                 }
             });
 
-            executor.submit(() -> procYt.getErrorStream().transferTo(OutputStream.nullOutputStream()));
-            executor.submit(() -> procFf.getErrorStream().transferTo(OutputStream.nullOutputStream()));
+            executor.submit(() -> procYt.getErrorStream().transferTo(System.err));
+            executor.submit(() -> procFf.getErrorStream().transferTo(System.err));
         } 
 
         int exitYt = procYt.waitFor();
