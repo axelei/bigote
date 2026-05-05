@@ -1,4 +1,4 @@
-name: Native Build (GraalVM 24)
+name: Quarkus Native Build (Java 24 + GraalVM 24)
 
 on:
   push:
@@ -13,7 +13,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up GraalVM 24
+      # -----------------------------
+      # GraalVM 24 + Java 24
+      # -----------------------------
+      - name: Set up GraalVM 24 (Java 24)
         uses: graalvm/setup-graalvm@v1
         with:
           version: '24'
@@ -21,25 +24,39 @@ jobs:
           components: 'native-image'
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Cache Maven dependencies
+      # -----------------------------
+      # Maven cache
+      # -----------------------------
+      - name: Cache Maven repository
         uses: actions/cache@v4
         with:
-          path: |
-            ~/.m2/repository
+          path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
 
+      # -----------------------------
+      # Ensure mvnw is executable
+      # -----------------------------
       - name: Make mvnw executable
         run: chmod +x ./mvnw
 
-      - name: Build native image with Maven
-        run: ./mvnw clean package -Pnative -DskipTests
+      # -----------------------------
+      # Build Quarkus native image
+      # -----------------------------
+      - name: Build native Quarkus application
+        run: |
+          ./mvnw clean package \
+            -Pnative \
+            -DskipTests \
+            -Dquarkus.native.container-build=true
 
-      - name: Upload native binary
+      # -----------------------------
+      # Upload native binary
+      # -----------------------------
+      - name: Upload native executable
         uses: actions/upload-artifact@v4
         with:
-          name: native-binary
+          name: quarkus-native-java24
           path: |
             target/*-runner
-            target/*.jar
