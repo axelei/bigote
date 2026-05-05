@@ -1,4 +1,4 @@
-name: Quarkus Native Build (Java 24 + GraalVM 24)
+name: Quarkus Native Build (GraalVM)
 
 on:
   push:
@@ -10,53 +10,42 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
       # -----------------------------
-      # GraalVM 24 + Java 24
+      # GraalVM (stable + supported)
       # -----------------------------
-      - name: Set up GraalVM 24 (Java 24)
+      - name: Set up GraalVM
         uses: graalvm/setup-graalvm@v1
         with:
-          version: '24'
-          java-version: '24'
+          version: '23'
+          java-version: '21'
           components: 'native-image'
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       # -----------------------------
       # Maven cache
       # -----------------------------
-      - name: Cache Maven repository
+      - name: Cache Maven
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
 
       # -----------------------------
-      # Ensure mvnw is executable
+      # Build
       # -----------------------------
-      - name: Make mvnw executable
-        run: chmod +x ./mvnw
-
-      # -----------------------------
-      # Build Quarkus native image
-      # -----------------------------
-      - name: Build native Quarkus application
+      - name: Build native Quarkus app
         run: |
-          ./mvnw clean package \
-            -Pnative \
-            -DskipTests \
-            -Dquarkus.native.container-build=true
+          chmod +x ./mvnw
+          ./mvnw clean package -Pnative -DskipTests -Dquarkus.native.container-build=true
 
       # -----------------------------
-      # Upload native binary
+      # Upload artifact
       # -----------------------------
-      - name: Upload native executable
+      - name: Upload native binary
         uses: actions/upload-artifact@v4
         with:
-          name: quarkus-native-java24
-          path: |
-            target/*-runner
+          name: quarkus-native
+          path: target/*-runner
