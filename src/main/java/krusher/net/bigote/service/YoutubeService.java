@@ -1,4 +1,4 @@
-package krusher.net.service;
+package krusher.net.bigote.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -33,7 +33,7 @@ public class YoutubeService {
         }
     }
 
-    public void pipeYoutubeToMp3(String videoUrl, OutputStream targetStream) throws Exception {
+    public void pipeYoutubeToMp3(String videoUrl, OutputStream targetStream) throws InterruptedException, IOException {
         
         ProcessBuilder pbYt = new ProcessBuilder(
                 ytDlpBinaryLocation, "-f", "bestaudio", "--no-playlist", "-o", "-", videoUrl
@@ -53,7 +53,7 @@ public class YoutubeService {
                      OutputStream ffIn = procFf.getOutputStream()) {
                     ytIn.transferTo(ffIn);
                 } catch (IOException e) {
-                    System.err.println("Error en tubería yt-dlp a FFmpeg: " + e.getMessage());
+                    System.err.println("Error piping yt-dlp to FFmpeg: " + e.getMessage());
                 }
             });
 
@@ -62,7 +62,7 @@ public class YoutubeService {
                     ffOut.transferTo(targetStream);
                     targetStream.flush();
                 } catch (IOException e) {
-                    System.err.println("Error en tubería FFmpeg a destino: " + e.getMessage());
+                    System.err.println("Error piping FFmpeg to destiny: " + e.getMessage());
                 }
             });
 
@@ -74,7 +74,7 @@ public class YoutubeService {
         int exitFf = procFf.waitFor();
 
         if (exitYt != 0 || exitFf != 0) {
-            throw new RuntimeException("Fallo en procesos. yt-dlp: " + exitYt + ", ffmpeg: " + exitFf);
+            throw new RuntimeException("Failure in processes. yt-dlp: " + exitYt + ", ffmpeg: " + exitFf);
         }
     }
 }

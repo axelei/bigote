@@ -9,15 +9,4 @@ import static org.hamcrest.CoreMatchers.is;
 @QuarkusTest
 class YoutubeServiceTest {
 
-    @Test
-    void testDownloadMp3Endpoint() {
-
-    }
-
-    @Test
-    void obtenerTituloYouTube() {
-
-    }
-
-
 }

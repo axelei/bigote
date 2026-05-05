@@ -1,4 +1,4 @@
-package krusher.net.controller;
+package krusher.net.bigote.controller;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -9,7 +9,7 @@ import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.StreamingOutput;
-import krusher.net.service.YoutubeService;
+import krusher.net.bigote.service.YoutubeService;
 
 @ApplicationScoped
 @Path("/download")
@@ -17,10 +17,6 @@ public class DownloadResource {
 
     @Inject
     YoutubeService youtubeService;
-
-    public DownloadResource(YoutubeService youtubeService) {
-        this.youtubeService = youtubeService;
-    }
 
     @GET
     @Path("/mp3/")
@@ -37,6 +33,7 @@ public class DownloadResource {
         };
         return Response.ok(stream)
                 .header("Content-Disposition", "attachment;filename=\"" + filename + ".mp3\"")
+                .header("Content-Type", "audio/mpeg")
                 .build();
     }
 }
