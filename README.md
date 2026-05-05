@@ -7,7 +7,15 @@ Bigote is a very simple YouTube® music downloader with an HTML interface. Just 
 
 # Building and usage
 
-Bigote is built on Java 24. You can build or download a JAR file or a native executable. It requires [ffmpeg](https://www.ffmpeg.org/) and [yt-dlp](https://github.com/yt-dlp/yt-dlp) to be available in your system PATH. Alternatively, you can use a properties file such as:
+Bigote is built on Java 24. You can build or download a JAR file or a native executable. 
+
+You should be able to run locally by:
+
+```
+mvnw quarkus:run
+```
+
+It requires [ffmpeg](https://www.ffmpeg.org/) and [yt-dlp](https://github.com/yt-dlp/yt-dlp) to be available in your system PATH. Alternatively, you can use a properties file such as:
 
 ```
 ffmpeg.binary.location=C:/things/ffmpeg/bin/ffmpeg.exe
