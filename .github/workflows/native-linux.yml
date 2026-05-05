@@ -1,0 +1,45 @@
+name: Native Build (GraalVM 24)
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+jobs:
+  build-native:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up GraalVM 24 (Java 21)
+        uses: graalvm/setup-graalvm@v1
+        with:
+          version: '24'
+          java-version: '21'
+          components: 'native-image'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Make mvnw executable
+        run: chmod +x ./mvnw
+
+      - name: Build native image with Maven
+        run: ./mvnw clean package -Pnative -DskipTests
+
+      - name: Upload native binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-binary
+          path: |
+            target/*-runner
+            target/*.jar
