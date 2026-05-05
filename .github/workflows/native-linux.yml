@@ -1,4 +1,4 @@
-name: Quarkus Native Build (Mandrel + Java 21)
+name: Quarkus Native Build (Mandrel + Java 24)
 
 on:
   push:
@@ -14,13 +14,13 @@ jobs:
         uses: actions/checkout@v4
 
       # -----------------------------
-      # Java 21 (Temurin)
+      # Java 24 (Temurin)
       # -----------------------------
-      - name: Set up JDK 21
+      - name: Set up JDK 24
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 21
+          java-version: 24
           cache: maven
 
       # -----------------------------
@@ -30,7 +30,7 @@ jobs:
         uses: graalvm/setup-graalvm@v1
         with:
           distribution: mandrel
-          java-version: 21
+          java-version: 24
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       # -----------------------------
