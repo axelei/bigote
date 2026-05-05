@@ -67,8 +67,8 @@ public class YoutubeService {
                 }
             });
 
-            executor.submit(() -> procYt.getErrorStream().transferTo(System.err));
-            executor.submit(() -> procFf.getErrorStream().transferTo(System.err));
+            executor.submit(() -> procYt.getErrorStream().transferTo(OutputStream.nullOutputStream()));
+            executor.submit(() -> procFf.getErrorStream().transferTo(OutputStream.nullOutputStream()));
         } 
 
         int exitYt = procYt.waitFor();
